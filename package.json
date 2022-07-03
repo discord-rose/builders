@@ -1,0 +1,31 @@
+{
+  "name": "@jadl/builders",
+  "version": "0.0.1",
+  "description": "Builders for JaDL",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/discord-rose/builders.git"
+  },
+  "keywords": [
+    "jadl",
+    "builders",
+    "discord",
+    "discord-rose"
+  ],
+  "author": "JPBBerry",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/discord-rose/builders/issues"
+  },
+  "homepage": "https://github.com/discord-rose/builders#readme",
+  "dependencies": {
+    "discord-api-types": "^0.33.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.1"
+  }
+}
