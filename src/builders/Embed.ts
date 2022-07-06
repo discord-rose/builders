@@ -5,7 +5,7 @@ import Colors from '../utils/colors'
  * Discord Embed
  */
 export class Embed {
-  static default = new Embed()
+  static default = new Embed({})
 
   constructor(public obj: APIEmbed = Embed.default.clone().render()) {}
 
