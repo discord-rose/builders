@@ -17,21 +17,27 @@ export class MessageBuilder {
     return this
   }
 
-  addEmbed(...embedOrEmbeds: Array<APIEmbed[] | Embed[] | APIEmbed | Embed>) {
+  addEmbed(
+    ...embedOrEmbeds: Array<APIEmbed[] | Embed[] | APIEmbed | Embed>
+  ): this {
     const embeds = embedOrEmbeds
       .flat()
       .map((x) => (x instanceof Embed ? x.render() : x))
 
     this.message.embeds = embeds
+
+    return this
   }
 
-  addFiles(files: FileBuilder) {
+  addFiles(files: FileBuilder): this {
     if (!this.files) this.files = files.clone()
     else {
       files
         .clone()
         .files.forEach((file) => this.files!.add(file.name, file.buffer))
     }
+
+    return this
   }
 
   addComponentRow(
