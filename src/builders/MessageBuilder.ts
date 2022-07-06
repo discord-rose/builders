@@ -1,4 +1,4 @@
-import { APIEmbed, APIMessageActionRowComponent } from 'discord-api-types/v10'
+import { APIEmbed, APIMessageActionRowComponent } from 'discord-api-types/v9'
 import {
   APIInteractionResponseCallbackData,
   ComponentType
@@ -47,5 +47,15 @@ export class MessageBuilder {
     })
 
     return this
+  }
+
+  render() {
+    if (this.files && this.files.files.length) {
+      const formData = this.files.toFormData()
+
+      formData.append('payload_json', JSON.stringify(this.message))
+
+      return formData
+    } else return this.message
   }
 }

@@ -69,4 +69,63 @@ message.render() // form-data or JSON body
 
 # Parser
 
-balls
+## `parse(input)`
+
+`parse()` turns any readable type & the builders in this package into a valid @discordjs/rest RequestData object to be passed directly to the request. It uses the `parseMessage()` method (below) to create the type, but then adds all of the extra properties and headers necesarry for the request.
+
+```ts
+worker // instantiated worker with @discordjs/rest REST on .api
+
+import { parse, MessageTypes } from '@jadl/builders'
+
+function sendMessage (channelId: string, input: MessageTypes) {
+  worker.api.post(`/channels/${channelId}/messages`, parse(input))
+}
+// example list of what you can pass into parse below
+```
+
+## `parseMessage()`
+
+`parseMessage()` turns any readable type & the builders in this package into a valid message JSON or form-data. It can take many types like strings, our builders like Embeds and FileBuilders, and of course MessageBuilders, and tries it's best to configure it into a message ready to be sent
+
+> :warning: It is recommended to use `parse()` as not doing so might lack the necesarry headers and configuration to send it as an actual message
+
+```ts
+import { parseMessage } from '@jadl/builders'
+
+// works on stringified types such as strings, bigints, numbers & symbols
+parseMessage('hello world') => { content: 'hello world' }
+
+// works on our builders
+parseMessage(
+  new Embed()
+    .title('hello world')
+) => { embeds: [ { title: 'hello world' } ] }
+// anything with files involved will return a form-data
+parseMessage(
+  new FileBuilder()
+    .add('hello.txt', Buffer.from('hi'))
+) => FormData<[ ['hello.txt', Buffer<68 69>] ]>
+
+// and of course, on MessageBuilders
+parseMessage(
+  new MessageBuilder({ content: 'hello' })
+    .addEmbeds(
+      new Embed()
+        .title('goodbye')
+    )
+    .addComponentRow({
+      ...
+    })
+) => { content: 'hello', embeds: [ { title: 'goobye' }], components: [ ... ] }
+
+// as afforementied, when a file is involed MessageBuilders will also turn into form-data
+parseMessage(
+  new MessageBuilder({ content: 'hi' })
+    .addFiles(
+      new FileBuilder()
+        .add('hi.txt', Buffer.from('hi'))
+    )
+) => FormData<[ ['hi.txt', Buffer<68 69>], [ 'payload_json', '{"content": "hi"}' ] ]>
+                                           // json payloads are attached correctly for Discord uploading
+```
