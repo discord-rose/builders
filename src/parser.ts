@@ -53,12 +53,14 @@ export function parseMessage(input: MessageTypes) {
 }
 
 export function parse(input: MessageTypes): RequestData {
+  const data = parseMessage(input)
+
   return {
-    body: input instanceof FormData ? input : JSON.stringify(input),
+    body: data ? data : JSON.stringify(data),
     passThroughBody: true,
     headers:
-      input instanceof FormData
-        ? input.getHeaders()
+      data instanceof FormData
+        ? data.getHeaders()
         : {
             'Content-Type': 'application/json'
           }
