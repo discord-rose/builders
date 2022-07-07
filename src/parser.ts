@@ -56,7 +56,7 @@ export function parse(input: MessageTypes): RequestData {
   const data = parseMessage(input)
 
   return {
-    body: data ? data : JSON.stringify(data),
+    body: data instanceof FormData ? data : JSON.stringify(data),
     passThroughBody: true,
     headers:
       data instanceof FormData
