@@ -34,7 +34,7 @@ const isStringified = (val: any): val is StringifiedMessageTypes => {
   ].includes(typeof val)
 }
 
-export function parseMessage(input: MessageTypes) {
+export function parseToMessageBuilder(input: MessageTypes) {
   let messageBuilder =
     input instanceof MessageBuilder ? input : new MessageBuilder()
 
@@ -49,7 +49,11 @@ export function parseMessage(input: MessageTypes) {
     messageBuilder.setMessage(input)
   }
 
-  return messageBuilder.render()
+  return messageBuilder
+}
+
+export function parseMessage(input: MessageTypes) {
+  return parseToMessageBuilder(input).render()
 }
 
 export function parse(input: MessageTypes): RequestData {
