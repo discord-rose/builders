@@ -16,6 +16,8 @@ export type MessageTypes =
   | StringifiedMessageTypes
   | MessageObjectTypes
 
+export type TypeOrRender<T> = T | { render: () => T }
+
 export function resolveString(data: any): string {
   if (typeof data === 'string') return data
   if (Array.isArray(data)) return data.join(', ')

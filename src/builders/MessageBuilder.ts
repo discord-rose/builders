@@ -3,6 +3,7 @@ import {
   APIInteractionResponseCallbackData,
   ComponentType
 } from 'discord-api-types/v9'
+import { TypeOrRender } from '../parser'
 import { Embed } from './Embed'
 import { FileBuilder } from './FileBuilder'
 
@@ -11,18 +12,18 @@ export class MessageBuilder {
 
   constructor(public message: APIInteractionResponseCallbackData = {}) {}
 
-  setMessage(msg: this['message']): this {
-    this.message = msg
+  setMessage(msg: TypeOrRender<this['message']>): this {
+    this.message = 'render' in msg ? msg.render() : msg
 
     return this
   }
 
   addEmbed(
-    ...embedOrEmbeds: Array<APIEmbed[] | Embed[] | APIEmbed | Embed>
+    ...embedOrEmbeds: Array<TypeOrRender<APIEmbed> | TypeOrRender<APIEmbed>[]>
   ): this {
     const embeds = embedOrEmbeds
       .flat()
-      .map((x) => (x instanceof Embed ? x.render() : x))
+      .map((x) => ('render' in x ? x.render() : x))
 
     this.message.embeds = embeds
 
@@ -42,14 +43,17 @@ export class MessageBuilder {
 
   addComponentRow(
     ...componentOrComponents: Array<
-      APIMessageActionRowComponent | APIMessageActionRowComponent[]
+      | TypeOrRender<APIMessageActionRowComponent>
+      | TypeOrRender<APIMessageActionRowComponent>[]
     >
   ): this {
     if (!this.message.components) this.message.components = []
 
     this.message.components.push({
       type: ComponentType.ActionRow,
-      components: componentOrComponents.flat()
+      components: componentOrComponents
+        .flat()
+        .map((x) => ('render' in x ? x.render() : x))
     })
 
     return this
