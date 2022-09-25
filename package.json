@@ -1,6 +1,6 @@
 {
   "name": "@jadl/builders",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Builders for JaDL",
   "main": "dist/index.js",
   "scripts": {
