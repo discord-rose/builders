@@ -149,6 +149,53 @@ export class Embed {
     return new Embed(JSON.parse(JSON.stringify(this.obj)))
   }
 
+  static LIMITS = {
+    TITLE_LENGTH: 256,
+    DESCRIPTION_LENGTH: 4096,
+    FIELD_NAME_LENGTH: 256,
+    FIELD_VALUE_LENGTH: 1024,
+    FOOTER_TEXT_LENGTH: 2048,
+    AUTHOR_NAME_LENGTH: 256,
+    TOTAL_LENGTH: 6000,
+    FIELDS: 25
+  }
+
+  /**
+   * Total length of the embed of combined character elements (should not exceed 6000)
+   */
+  get length() {
+    return (
+      (this.obj.title?.length || 0) +
+      (this.obj.description?.length || 0) +
+      (this.obj.fields?.reduce(
+        (a, b) => a + b.name.length + b.value.length,
+        0
+      ) || 0) +
+      (this.obj.footer?.text?.length || 0) +
+      (this.obj.author?.name?.length || 0)
+    )
+  }
+
+  /**
+   * Tests the embeds values for exceeded limits
+   * @returns Whether or not a part of the embed exceeds it's limits
+   */
+  exceedsLimits() {
+    return (
+      this.length > Embed.LIMITS.TOTAL_LENGTH ||
+      (this.obj.title?.length || 0) > Embed.LIMITS.TITLE_LENGTH ||
+      (this.obj.description?.length || 0) > Embed.LIMITS.DESCRIPTION_LENGTH ||
+      (this.obj.fields?.length || 0) > Embed.LIMITS.FIELDS ||
+      this.obj.fields?.some(
+        (field) =>
+          field.name.length > Embed.LIMITS.FIELD_NAME_LENGTH ||
+          field.value.length > Embed.LIMITS.FIELD_VALUE_LENGTH
+      ) ||
+      (this.obj.footer?.text?.length || 0) > Embed.LIMITS.FOOTER_TEXT_LENGTH ||
+      (this.obj.author?.name?.length || 0) > Embed.LIMITS.AUTHOR_NAME_LENGTH
+    )
+  }
+
   /**
    * Renders the embed
    * @returns
